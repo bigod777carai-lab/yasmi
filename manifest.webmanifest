@@ -1,0 +1,10 @@
+{
+  "name": "Yasmi",
+  "short_name": "Yasmi",
+  "description": "Yasmi — música escura e intensidade sonora.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "icons": []
+}
