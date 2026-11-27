@@ -3,64 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#09090b">
-  <meta name="description" content="Yasmi — música escura e intensidade sonora.">
-  <title>Yasmi</title>
+  <meta name="theme-color" content="#101114">
+  <meta name="description" content="Yasmin AI — sua assistente para ideias, escrita e aprendizado.">
+  <title>Yasmin AI</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="app-shell">
-    <header class="topbar">
-      <button class="icon-button" type="button" aria-label="Abrir menu">
-        <span></span><span></span>
-      </button>
-      <div class="brand">YASMI</div>
-      <button class="avatar" type="button" aria-label="Abrir perfil">Y</button>
-    </header>
-
-    <section class="hero" aria-label="Destaque principal">
-      <div class="grain"></div>
-      <div class="orb orb-one"></div>
-      <div class="orb orb-two"></div>
-      <p class="eyebrow">MÚSICA SEM LIMITES</p>
-      <h1><span>DARK</span><strong>SAD</strong></h1>
-      <p class="subtitle">No silêncio, nós gritamos.</p>
-      <button class="listen-button" id="listenButton" type="button">
-        <span class="play-icon">▶</span>
-        <span>OUVIR AGORA</span>
-      </button>
-    </section>
-
-    <section class="section">
-      <div class="section-heading">
-        <h2>Para você</h2>
-        <button type="button">Ver tudo</button>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Barra lateral">
+      <div class="sidebar-top">
+        <a class="brand" href="./" aria-label="Yasmin AI início">
+          <span class="brand-mark" aria-hidden="true">Y</span>
+          <span>yasmin<span class="brand-ai">AI</span></span>
+        </a>
+        <button class="icon-button sidebar-close" id="closeSidebar" type="button" aria-label="Fechar menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
       </div>
-      <div class="cards">
-        <article class="card card-red">
-          <div class="cover">
-            <span>DS</span>
-          </div>
-          <h3>Dark Sessions</h3>
-          <p>Sombras e frequência</p>
-        </article>
-        <article class="card card-gray">
-          <div class="cover">
-            <span>NS</span>
-          </div>
-          <h3>Night Signals</h3>
-          <p>Enquanto o mundo dorme</p>
-        </article>
+      <button class="new-chat" id="newChat" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        <span>Nova conversa</span>
+        <span class="shortcut">⌘ K</span>
+      </button>
+      <div class="history-heading">Recentes</div>
+      <nav class="history-list" id="historyList" aria-label="Conversas recentes"></nav>
+      <div class="sidebar-bottom">
+        <div class="privacy-note"><span class="privacy-dot"></span><span>Suas conversas ficam neste dispositivo</span></div>
+        <div class="profile"><span class="profile-avatar">Y</span><span class="profile-name">Yasmin AI</span><span class="profile-plan">Local</span></div>
       </div>
-    </section>
+    </aside>
 
-    <nav class="tabbar" aria-label="Navegação principal">
-      <button class="active" type="button" aria-label="Início"><span>⌂</span><small>Início</small></button>
-      <button type="button" aria-label="Buscar"><span>⌕</span><small>Buscar</small></button>
-      <button type="button" aria-label="Biblioteca"><span>▤</span><small>Biblioteca</small></button>
-    </nav>
-  </main>
+    <main class="main-panel">
+      <header class="topbar">
+        <button class="icon-button menu-button" id="openSidebar" type="button" aria-label="Abrir menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <div class="mobile-brand"><span class="brand-mark">Y</span><span>yasmin<span class="brand-ai">AI</span></span></div>
+        <div class="model-label"><span class="status-dot"></span> Yasmin <span class="model-subtitle">· modo local</span></div>
+        <button class="icon-button clear-button" id="clearChat" type="button" aria-label="Apagar conversa atual" title="Apagar conversa">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 13h12l1-13M9 7V4h6v3"/></svg>
+        </button>
+      </header>
+
+      <section class="conversation" id="conversation" aria-live="polite" aria-label="Conversa">
+        <div class="welcome" id="welcome">
+          <div class="welcome-mark"><span>Y</span><i></i></div>
+          <p class="eyebrow">ASSISTENTE PESSOAL</p>
+          <h1>Olá. Como posso<br><span>ajudar você hoje?</span></h1>
+          <p class="welcome-copy">Converse, organize suas ideias e dê o próximo passo.</p>
+          <div class="suggestions" aria-label="Sugestões de conversa">
+            <button class="suggestion" type="button" data-prompt="Me ajude a organizar minhas tarefas de hoje">
+              <span class="suggestion-icon violet">✦</span><span><strong>Organize meu dia</strong><small>Transforme tarefas em um plano simples</small></span><span class="suggestion-arrow">↗</span>
+            </button>
+            <button class="suggestion" type="button" data-prompt="Me ajude a escrever uma mensagem profissional">
+              <span class="suggestion-icon blue">✎</span><span><strong>Escreva comigo</strong><small>Encontre as palavras certas</small></span><span class="suggestion-arrow">↗</span>
+            </button>
+            <button class="suggestion" type="button" data-prompt="Explique um assunto difícil de um jeito simples">
+              <span class="suggestion-icon amber">⌁</span><span><strong>Aprenda algo novo</strong><small>Peça uma explicação clara e direta</small></span><span class="suggestion-arrow">↗</span>
+            </button>
+            <button class="suggestion" type="button" data-prompt="Me dê ideias criativas para um projeto">
+              <span class="suggestion-icon green">◇</span><span><strong>Explore ideias</strong><small>Comece a criar seu próximo projeto</small></span><span class="suggestion-arrow">↗</span>
+            </button>
+          </div>
+        </div>
+        <div class="messages" id="messages"></div>
+      </section>
+
+      <footer class="composer-area">
+        <form class="composer" id="chatForm">
+          <textarea id="messageInput" rows="1" placeholder="Envie uma mensagem para Yasmin..." aria-label="Escreva sua mensagem" maxlength="4000"></textarea>
+          <div class="composer-controls">
+            <span class="composer-hint">Yasmin pode cometer erros. Confira informações importantes.</span>
+            <button class="send-button" id="sendButton" type="submit" aria-label="Enviar mensagem" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-7 7 7-7 7 7"/></svg>
+            </button>
+          </div>
+        </form>
+        <p class="local-disclaimer">Modo local: as respostas são demonstrações e não vêm de um modelo de IA conectado.</p>
+      </footer>
+    </main>
+  </div>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
   <script src="script.js"></script>
 </body>
 </html>

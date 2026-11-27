@@ -1,17 +1,11 @@
-# Yasmi
+# Yasmin AI
 
-PWA mobile responsiva com estética dark, construída com HTML, CSS e JavaScript.
+Yasmin AI é uma interface de chat responsiva em português, com tema escuro, histórico local e suporte a instalação como PWA.
 
-## Executar localmente
+## Como usar
 
-```bash
-python3 -m http.server 4173
-```
+Abra o site publicado pelo GitHub Pages ou sirva os arquivos em um servidor estático. As conversas ficam armazenadas no `localStorage` do navegador.
 
-Acesse `http://localhost:4173`.
+## Importante
 
-## Publicar no GitHub Pages
-
-1. Abra **Settings > Pages** no repositório.
-2. Em **Build and deployment**, selecione **Deploy from a branch**.
-3. Escolha a branch `main` e a pasta `/ (root)`.
+O modo atual é uma demonstração offline: as respostas são exemplos simples programados no navegador, não são geradas por um modelo de IA e não consultam a internet. Para adicionar uma IA real, conecte o frontend a um backend próprio que proteja as credenciais do provedor. Nunca coloque uma chave secreta diretamente no JavaScript público.

@@ -1,4 +1,4 @@
-const CACHE = 'yasmi-v1';
+const CACHE = 'yasmin-ai-v2';
 const ASSETS = ['./', './index.html', './styles.css', './script.js', './manifest.webmanifest'];
 
 self.addEventListener('install', event => {
@@ -12,5 +12,6 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
   event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request)));
 });

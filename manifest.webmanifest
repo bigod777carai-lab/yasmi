@@ -1,10 +1,10 @@
 {
-  "name": "Yasmi",
-  "short_name": "Yasmi",
-  "description": "Yasmi — música escura e intensidade sonora.",
+  "name": "Yasmin AI — Assistente pessoal",
+  "short_name": "Yasmin AI",
+  "description": "Yasmin AI — uma interface de assistente pessoal em modo local de demonstração.",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#09090b",
-  "theme_color": "#09090b",
+  "background_color": "#101114",
+  "theme_color": "#101114",
   "icons": []
 }
