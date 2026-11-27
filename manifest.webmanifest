@@ -1,7 +1,7 @@
 {
   "name": "Yasmin AI — Assistente pessoal",
   "short_name": "Yasmin AI",
-  "description": "Yasmin AI — uma interface de assistente pessoal em modo local de demonstração.",
+  "description": "Yasmin AI — assistente pessoal com IA.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#101114",

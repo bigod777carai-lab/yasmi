@@ -1,11 +1,29 @@
 # Yasmin AI
 
-Yasmin AI é uma interface de chat responsiva em português, com tema escuro, histórico local e suporte a instalação como PWA.
+Interface de chat responsiva em português com histórico local e backend serverless seguro.
 
-## Como usar
+## Implantação na Vercel
 
-Abra o site publicado pelo GitHub Pages ou sirva os arquivos em um servidor estático. As conversas ficam armazenadas no `localStorage` do navegador.
+1. Importe `bigod777carai-lab/yasmi` no Vercel.
+2. Mantenha o framework como **Other**.
+3. Em **Settings → Environment Variables**, adicione:
+   - Nome: `OPENAI_API_KEY`
+   - Valor: sua chave da OpenAI
+   - Ambientes: Production, Preview e Development
+4. Implante novamente depois de adicionar a variável.
 
-## Importante
+A chave é acessada apenas por `api/chat.js` no servidor. O navegador não recebe nem pode ler a chave.
 
-O modo atual é uma demonstração offline: as respostas são exemplos simples programados no navegador, não são geradas por um modelo de IA e não consultam a internet. Para adicionar uma IA real, conecte o frontend a um backend próprio que proteja as credenciais do provedor. Nunca coloque uma chave secreta diretamente no JavaScript público.
+## Desenvolvimento
+
+Execute o projeto com a CLI da Vercel para testar `/api/chat`:
+
+```bash
+npx vercel dev
+```
+
+## Segurança
+
+- Nunca coloque `OPENAI_API_KEY` em arquivos públicos.
+- Nunca use `NEXT_PUBLIC_*` ou outras variáveis expostas ao navegador.
+- Configure limites de uso e faturamento na conta da OpenAI.

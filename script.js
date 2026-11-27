@@ -20,19 +20,10 @@ function loadConversations() {
 }
 function saveConversations() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations)); }
-  catch { showNotice('Não foi possível salvar. O armazenamento do navegador pode estar cheio.'); }
+  catch { showNotice('Não foi possível salvar as conversas neste navegador.'); }
 }
 function makeId() { return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`; }
 function currentConversation() { return conversations.find(item => item.id === currentId); }
-function escapeText(value) {
-  return value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
-}
-function showNotice(message) {
-  const notice = document.createElement('div');
-  notice.className = 'message-actions';
-  notice.textContent = message;
-  messagesEl.appendChild(notice);
-}
 function titleFor(text) { return text.trim().replace(/\s+/g, ' ').slice(0, 38) || 'Nova conversa'; }
 function renderHistory() {
   historyList.replaceChildren();
@@ -47,8 +38,7 @@ function renderHistory() {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = `history-item${conversation.id === currentId ? ' active' : ''}`;
-    button.setAttribute('aria-label', `Abrir conversa: ${conversation.title}`);
-    button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l1.5-3A7.5 7.5 0 1 1 20 11.5Z"/></svg>';
+    button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l1.5-3A7.5 7.5 0 1 1 20 11.5Z"/></svg>'; 
     const title = document.createElement('span');
     title.textContent = conversation.title || 'Nova conversa';
     button.append(title);
@@ -62,7 +52,6 @@ function appendMessage(role, text) {
   const avatar = document.createElement('span');
   avatar.className = 'message-avatar';
   avatar.textContent = role === 'assistant' ? 'Y' : 'Você';
-  avatar.setAttribute('aria-hidden', 'true');
   const content = document.createElement('div');
   content.className = 'message-content';
   const name = document.createElement('div');
@@ -71,9 +60,7 @@ function appendMessage(role, text) {
   const body = document.createElement('div');
   body.className = 'message-text';
   body.textContent = text;
-  content.append(name, body);
-  row.append(avatar, content);
-  messagesEl.append(row);
+  content.append(name, body); row.append(avatar, content); messagesEl.append(row);
   return row;
 }
 function renderConversation() {
@@ -83,21 +70,10 @@ function renderConversation() {
   welcomeEl.classList.toggle('hidden', hasMessages);
   messagesEl.classList.toggle('visible', hasMessages);
   if (conversation) conversation.messages.forEach(message => appendMessage(message.role, message.text));
-  renderHistory();
-  scrollToBottom();
+  renderHistory(); scrollToBottom();
 }
-function openConversation(id) {
-  currentId = id;
-  renderConversation();
-  closeSidebar();
-  input.focus();
-}
-function newConversation() {
-  currentId = null;
-  renderConversation();
-  closeSidebar();
-  input.focus();
-}
+function openConversation(id) { currentId = id; renderConversation(); closeSidebar(); input.focus(); }
+function newConversation() { currentId = null; renderConversation(); closeSidebar(); input.focus(); }
 function scrollToBottom() { requestAnimationFrame(() => { const area = $('.conversation'); area.scrollTop = area.scrollHeight; }); }
 function autosize() {
   input.style.height = 'auto';
@@ -111,30 +87,31 @@ function createMessage(role, text) {
   if (role === 'user' && conversation.messages.filter(message => message.role === 'user').length === 1) conversation.title = titleFor(text);
   saveConversations();
 }
-function localReply(prompt) {
-  const text = prompt.trim();
-  const lower = text.toLocaleLowerCase('pt-BR');
-  if (/^(oi|olá|ola|bom dia|boa tarde|boa noite|e aí|eai)[!.\s]*$/i.test(text)) return 'Olá! Que bom ter você por aqui. Como posso ajudar? Você pode me contar o que está tentando fazer ou escolher uma sugestão na tela inicial.\n\nObservação: estou no modo local de demonstração, então ainda não consulto um modelo de IA nem a internet.';
-  if (/(quem é você|quem e voce|o que você é|o que voce e|yasmin)/i.test(lower)) return 'Sou a Yasmin, a assistente deste aplicativo. No momento, estou funcionando em modo local de demonstração: posso ajudar a estruturar ideias e perguntas, mas não tenho um modelo de IA conectado nem acesso à internet.\n\nPara respostas realmente inteligentes e conhecimento amplo, o app precisa ser conectado a um serviço de IA por um backend seguro.';
-  if (/(organizar|tarefas|planejar|planejamento|rotina)/i.test(lower)) return 'Vamos organizar isso por etapas:\n\n1. Anote tudo o que precisa fazer.\n2. Marque o que é urgente e importante.\n3. Escolha até três prioridades para hoje.\n4. Divida cada prioridade em uma primeira ação pequena.\n5. Reserve pausas e revise o plano no fim do dia.\n\nSe você me disser suas tarefas e prazos, posso ajudar a montar uma lista mais clara. (Esta é uma sugestão local, não uma resposta gerada por IA.)';
-  if (/(escrever|mensagem|e-mail|email|texto|redigir)/i.test(lower)) return 'Posso ajudar a estruturar sua mensagem. Uma forma simples é:\n\n• Cumprimente a pessoa.\n• Explique o motivo do contato em uma frase.\n• Inclua o pedido ou a informação principal.\n• Termine com o próximo passo e uma despedida.\n\nConte para quem é a mensagem, o objetivo e o tom desejado para eu preparar um rascunho. (Resposta de demonstração local.)';
-  if (/(ideia|criativ|projeto|criar)/i.test(lower)) return 'Para desenvolver uma ideia, comece por três perguntas:\n\n• Que problema ou necessidade você quer atender?\n• Para quem essa solução seria útil?\n• Qual é a menor versão que você consegue testar?\n\nEscreva algumas possibilidades sem julgá-las e escolha uma para experimentar. Se me contar mais sobre o projeto, posso ajudar a organizar os próximos passos. (Resposta de demonstração local.)';
-  if (/(explica|aprender|estudar|assunto|difícil)/i.test(lower)) return 'Claro — posso ajudar a tornar o assunto mais fácil de abordar. Diga qual é o tema e, se puder, seu nível de familiaridade com ele.\n\nNota: esta versão está em modo local e não tem conhecimento amplo conectado. Para explicações confiáveis sobre fatos específicos, precisamos integrar um modelo de IA e verificar fontes.';
-  if (/(obrigad|valeu)/i.test(lower)) return 'Por nada! Se quiser, me conte o que você gostaria de fazer a seguir. Lembre-se: esta versão é uma demonstração local, não uma IA conectada.';
-  return 'Recebi sua mensagem. Esta versão da Yasmin é uma interface demonstrativa com respostas locais simples — ela ainda não entende perguntas como um modelo de IA nem consulta conhecimentos do mundo ou a internet.\n\nPosso ajudar com sugestões básicas para organizar tarefas, estruturar textos e explorar ideias. Para respostas completas, será necessário conectar o app a um serviço de IA usando um backend seguro (nunca exponha uma chave secreta no navegador).';
-}
 function showTyping() {
   const row = document.createElement('article');
-  row.className = 'message-row assistant';
-  row.id = 'typingIndicator';
+  row.className = 'message-row assistant'; row.id = 'typingIndicator';
   const avatar = document.createElement('span'); avatar.className = 'message-avatar'; avatar.textContent = 'Y';
   const content = document.createElement('div'); content.className = 'message-content';
   const name = document.createElement('div'); name.className = 'message-name'; name.textContent = 'Yasmin';
-  const dots = document.createElement('div'); dots.className = 'typing'; dots.setAttribute('aria-label', 'Yasmin está preparando uma resposta');
-  dots.innerHTML = '<span></span><span></span><span></span>';
+  const dots = document.createElement('div'); dots.className = 'typing'; dots.innerHTML = '<span></span><span></span><span></span>'; 
   content.append(name, dots); row.append(avatar, content); messagesEl.append(row); scrollToBottom();
 }
-function sendMessage(text) {
+async function askYasmin(messages) {
+  const response = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      messages: messages.map(message => ({ role: message.role, content: message.text }))
+    })
+  });
+  const data = await response.json().catch(() => ({ error: 'Resposta inválida da API.' }));
+  if (!response.ok) {
+    if (data.code === 'missing_api_key') throw new Error('A chave OPENAI_API_KEY ainda não foi configurada na Vercel.');
+    throw new Error(data.error || 'Não foi possível obter a resposta da Yasmin.');
+  }
+  return data.reply;
+}
+async function sendMessage(text) {
   const cleaned = text.trim();
   if (!cleaned || busy) return;
   if (!currentConversation()) {
@@ -144,12 +121,17 @@ function sendMessage(text) {
   welcomeEl.classList.add('hidden'); messagesEl.classList.add('visible');
   createMessage('user', cleaned); appendMessage('user', cleaned); renderHistory();
   input.value = ''; autosize(); busy = true; sendButton.disabled = true; showTyping();
-  window.setTimeout(() => {
+  try {
+    const conversation = currentConversation();
+    const reply = await askYasmin(conversation.messages);
     $('#typingIndicator')?.remove();
-    const reply = localReply(cleaned);
     createMessage('assistant', reply); appendMessage('assistant', reply);
+  } catch (error) {
+    $('#typingIndicator')?.remove();
+    appendMessage('assistant', `Não consegui responder agora. ${error.message}`);
+  } finally {
     busy = false; autosize(); renderHistory(); scrollToBottom(); input.focus();
-  }, 450 + Math.random() * 450);
+  }
 }
 function clearCurrentConversation() {
   if (!currentId) return;
@@ -160,9 +142,7 @@ function openSidebar() { sidebar.classList.add('open'); backdrop.classList.add('
 function closeSidebar() { sidebar.classList.remove('open'); backdrop.classList.remove('open'); }
 form.addEventListener('submit', event => { event.preventDefault(); sendMessage(input.value); });
 input.addEventListener('input', autosize);
-input.addEventListener('keydown', event => {
-  if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); form.requestSubmit(); }
-});
+input.addEventListener('keydown', event => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); form.requestSubmit(); } });
 $('#newChat').addEventListener('click', newConversation);
 $('#clearChat').addEventListener('click', clearCurrentConversation);
 $('#openSidebar').addEventListener('click', openSidebar);
@@ -174,7 +154,3 @@ document.addEventListener('keydown', event => {
   if (event.key === 'Escape') closeSidebar();
 });
 renderConversation();
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
-}
